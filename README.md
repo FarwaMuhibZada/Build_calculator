@@ -29,7 +29,7 @@ deployment link [(https://drum-machine-farwaamhubzada.netlify.app/)]
 1. Clone the repository:
 ```bash
    git clone git@github.com:FarwaMuhibZada/build-calculator.git
-   cd build-drum-machine
+   cd build-calculator
 ```
 2. Install dependencies:
 ```bash
