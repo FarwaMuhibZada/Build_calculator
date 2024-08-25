@@ -24,7 +24,7 @@ const Calculator = () => {
         newParts.unshift(parts[i]);
         let j = i - 1;
         while (j >= 0 && isOperator(parts[j])) {
-          j--;
+          j - 1;
         }
         i = j;
       } else {
