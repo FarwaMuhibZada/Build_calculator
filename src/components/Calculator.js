@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateExpression, updateAnswer } from '../redux/actions';
-import './Calculator.css'; // Ensure this path is correct
+import { evaluate } from 'mathjs';
 
 const Calculator = () => {
   const dispatch = useDispatch();
   const expression = useSelector((state) => state.expression);
   const answer = useSelector((state) => state.answer);
+  const [lastWasEquals, setLastWasEquals] = useState(false); // Track if last operation was "="
 
   const isOperator = (symbol) => /[*/+-]/.test(symbol);
 
@@ -14,6 +15,7 @@ const Calculator = () => {
     if (symbol === "clear") {
       dispatch(updateAnswer(""));
       dispatch(updateExpression("0"));
+      setLastWasEquals(false);
     } else if (symbol === "negative") {
       if (answer === "") return;
       dispatch(updateAnswer(
@@ -23,9 +25,16 @@ const Calculator = () => {
       if (answer === "") return;
       dispatch(updateAnswer((parseFloat(answer) / 100).toString()));
     } else if (isOperator(symbol)) {
-      dispatch(updateExpression(expression.trim() + " " + symbol + " "));
+      if (lastWasEquals) {
+        // Start new calculation with the result of previous calculation
+        dispatch(updateExpression(answer + " " + symbol + " "));
+        setLastWasEquals(false);
+      } else {
+        dispatch(updateExpression(expression.trim() + " " + symbol + " "));
+      }
     } else if (symbol === "=") {
       calculate();
+      setLastWasEquals(true); // Set flag to true after "="
     } else if (symbol === "0") {
       if (expression.charAt(0) !== "0") {
         dispatch(updateExpression(expression + symbol));
@@ -65,10 +74,12 @@ const Calculator = () => {
       }
     }
     const newExpression = newParts.join(" ");
-    if (isOperator(newExpression.charAt(0))) {
-      dispatch(updateAnswer(eval(answer + newExpression).toString()));
-    } else {
-      dispatch(updateAnswer(eval(newExpression).toString()));
+    try {
+      const result = evaluate(newExpression);
+      dispatch(updateAnswer(result.toString()));
+    } catch (error) {
+      console.error("Error in calculation:", error);
+      dispatch(updateAnswer("Error"));
     }
     dispatch(updateExpression(""));
   };
