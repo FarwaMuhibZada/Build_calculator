@@ -1,7 +1,7 @@
+import { evaluate } from 'mathjs';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateExpression, updateAnswer } from '../redux/actions';
-import { evaluate } from 'mathjs';
 
 const Calculator = () => {
   const dispatch = useDispatch();
@@ -17,6 +17,7 @@ const Calculator = () => {
 
     const parts = trimmedExpression.split(' ');
     const newParts = [];
+
     for (let i = parts.length - 1; i >= 0; i--) {
       if (['*', '/', '+'].includes(parts[i]) && isOperator(parts[i - 1])) {
         newParts.unshift(parts[i]);
@@ -31,11 +32,12 @@ const Calculator = () => {
         newParts.unshift(parts[i]);
       }
     }
+
     const newExpression = newParts.join(' ');
     try {
       const result = evaluate(newExpression);
       dispatch(updateAnswer(result.toString()));
-    } catch (error) {
+    } catch {
       dispatch(updateAnswer('Error'));
     }
     dispatch(updateExpression(''));
@@ -65,13 +67,12 @@ const Calculator = () => {
       setLastWasEquals(true); // Set flag to true after "="
     } else if (symbol === '0') {
       if (expression.charAt(0) !== '0') {
-        dispatch(updateExpression(`${expression}${symbol}`));
+        dispatch(updateExpression(`${expression}0`));
       }
     } else if (symbol === '.') {
       const lastNumber = expression.split(/[-+/*]/g).pop();
-      if (!lastNumber) return;
-      if (lastNumber.includes('.')) return;
-      dispatch(updateExpression(`${expression}${symbol}`));
+      if (!lastNumber || lastNumber.includes('.')) return;
+      dispatch(updateExpression(`${expression}.`));
     } else {
       if (expression.charAt(0) === '0') {
         dispatch(updateExpression(`${expression.slice(1)}${symbol}`));
