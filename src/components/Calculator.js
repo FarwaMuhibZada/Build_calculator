@@ -17,19 +17,19 @@ const Calculator = () => {
 
     const parts = trimmedExpression.split(' ');
     const newParts = [];
+    let i = parts.length - 1;
 
-    for (let i = parts.length - 1; i >= 0; i--) {
+    while (i >= 0) {
       if (['*', '/', '+'].includes(parts[i]) && isOperator(parts[i - 1])) {
         newParts.unshift(parts[i]);
-        let j = 0;
-        let k = i - 1;
-        while (isOperator(parts[k])) {
-          k--;
-          j++;
+        let j = i - 1;
+        while (j >= 0 && isOperator(parts[j])) {
+          j--;
         }
-        i -= j;
+        i = j;
       } else {
         newParts.unshift(parts[i]);
+        i--;
       }
     }
 
@@ -48,13 +48,22 @@ const Calculator = () => {
       dispatch(updateAnswer(''));
       dispatch(updateExpression('0'));
       setLastWasEquals(false);
-    } else if (symbol === 'negative') {
+      return;
+    }
+
+    if (symbol === 'negative') {
       if (answer === '') return;
       dispatch(updateAnswer(answer.charAt(0) === '-' ? answer.slice(1) : `-${answer}`));
-    } else if (symbol === 'percent') {
+      return;
+    }
+
+    if (symbol === 'percent') {
       if (answer === '') return;
       dispatch(updateAnswer((parseFloat(answer) / 100).toString()));
-    } else if (isOperator(symbol)) {
+      return;
+    }
+
+    if (isOperator(symbol)) {
       if (lastWasEquals) {
         // Start new calculation with the result of previous calculation
         dispatch(updateExpression(`${answer} ${symbol} `));
@@ -62,23 +71,33 @@ const Calculator = () => {
       } else {
         dispatch(updateExpression(`${expression.trim()} ${symbol} `));
       }
-    } else if (symbol === '=') {
+      return;
+    }
+
+    if (symbol === '=') {
       calculate();
       setLastWasEquals(true); // Set flag to true after "="
-    } else if (symbol === '0') {
+      return;
+    }
+
+    if (symbol === '0') {
       if (expression.charAt(0) !== '0') {
         dispatch(updateExpression(`${expression}0`));
       }
-    } else if (symbol === '.') {
+      return;
+    }
+
+    if (symbol === '.') {
       const lastNumber = expression.split(/[-+/*]/g).pop();
       if (!lastNumber || lastNumber.includes('.')) return;
       dispatch(updateExpression(`${expression}.`));
+      return;
+    }
+
+    if (expression.charAt(0) === '0') {
+      dispatch(updateExpression(`${expression.slice(1)}${symbol}`));
     } else {
-      if (expression.charAt(0) === '0') {
-        dispatch(updateExpression(`${expression.slice(1)}${symbol}`));
-      } else {
-        dispatch(updateExpression(`${expression}${symbol}`));
-      }
+      dispatch(updateExpression(`${expression}${symbol}`));
     }
   };
 

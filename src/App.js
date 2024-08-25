@@ -9,7 +9,6 @@ function App() {
     <Provider store={store}>
       <div className="container">
         <h1>Calculator Application</h1>
-        
         <Calculator />
       </div>
     </Provider>
