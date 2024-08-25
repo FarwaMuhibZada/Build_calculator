@@ -22,14 +22,14 @@ const Calculator = () => {
     while (i >= 0) {
       if (['*', '/', '+'].includes(parts[i]) && isOperator(parts[i - 1])) {
         newParts.unshift(parts[i]);
-        let j = i - 1;
+        let j = i - 1; // Use 'const' instead of 'let' for 'j'
         while (j >= 0 && isOperator(parts[j])) {
-          j - 1;
+          j -= 1;
         }
         i = j;
       } else {
         newParts.unshift(parts[i]);
-        i -= 1; // Replaced `i--` with `i -= 1`
+        i -= 1;
       }
     }
 
