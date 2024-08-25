@@ -29,7 +29,7 @@ const Calculator = () => {
         i = j;
       } else {
         newParts.unshift(parts[i]);
-        i--;
+        i -= 1; // Replaced `i--` with `i -= 1`
       }
     }
 
