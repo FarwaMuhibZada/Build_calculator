@@ -5,14 +5,15 @@ const initialState = {
   answer: '',
 };
 
-const rootReducer = (state = initialState, action) => {
+const rootReducer = (state, action) => {
+  const currentState = state === undefined ? initialState : state;
   switch (action.type) {
     case UPDATE_EXPRESSION:
-      return { ...state, expression: action.payload };
+      return { ...currentState, expression: action.payload };
     case UPDATE_ANSWER:
-      return { ...state, answer: action.payload };
+      return { ...currentState, answer: action.payload };
     default:
-      return state;
+      return currentState;
   }
 };
 

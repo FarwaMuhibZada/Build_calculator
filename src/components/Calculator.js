@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateExpression, updateAnswer } from '../redux/actions';
 
-const Calculator = () => {
+function Calculator() {
   const dispatch = useDispatch();
   const expression = useSelector((state) => state.expression);
   const answer = useSelector((state) => state.answer);
@@ -261,6 +261,6 @@ const Calculator = () => {
       </button>
     </div>
   );
-};
+}
 
 export default Calculator;
