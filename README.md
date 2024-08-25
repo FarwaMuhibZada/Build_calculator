@@ -14,7 +14,7 @@ This project is a simple calculator built using react. It supports basic arithme
 
 
 ## Demo 📸
-deployment link [(https://drum-machine-farwaamhubzada.netlify.app/)]
+deployment link [(https://react-calculator-farwamuhibzada.netlify.app/)]
 
 ![Random Quote Machine Screenshot](./src/assets/Capture.PNG)
 
@@ -22,6 +22,7 @@ deployment link [(https://drum-machine-farwaamhubzada.netlify.app/)]
 ## Technologies Used 💡
 
 - React
+- redux
 - CSS
 
 ## Installation 🔧
